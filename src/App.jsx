@@ -1,122 +1,165 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+function NavBar() {
+  return (
+    <header className="navbar">
+      <h2 className="brand">
+        <span className="logo" aria-hidden="true">
+         <span className="circle circle-one"></span>
+         <span className="circle circle-two"></span>
+        </span>
+
+        Campus Company
+      </h2>
+
+      <nav aria-label="Main navigation">
+        <a href="#discover">Discover</a>
+      </nav>
+    </header>
+  );
+}
+function ProfileCard({
+  name,
+  year,
+  activity,
+  interests,
+  availability,
+  image,
+  selectedYear
+}) {
+  const [isSaved, setIsSaved] = useState(false);
+
+  function handleSave() {
+    setIsSaved((previousValue) => !previousValue);
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <article
+      className="profile-card"
+      hidden={selectedYear !== "All years" && selectedYear !== year}
+    >
+  {image && (
+    <img className="profile-photo" src={image} alt={name} />
+  )}
 
-      <div className="ticks"></div>
+  <h2>{name}</h2>
+      <p>{year}</p>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <h3>{activity}</h3>
+      <p className="interests">{interests}</p>
+      <p>Available: {availability}</p>
+      
+      <button
+        type="button"
+        onClick={handleSave}
+        aria-pressed={isSaved}
+      >
+        {isSaved ? "Saved ✓" : "Save"}
+      </button>
+    </article>
+  );
+}
+function App() {
+  const [selectedYear, setSelectedYear] = useState("All years");
+  useEffect(() => {
+    document.title = "Campus Company | Discover";
+  }, []);
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+  return (
+    <div>
+      <NavBar />
+
+      <main id="discover">
+        <h1>Find someone to do things with.</h1>
+
+        <p>
+          Meet Northwestern students looking for company
+          for everyday plans.
+        </p>
+<div className="year-filter">
+  <label htmlFor="year-filter">Filter by year: </label>
+
+  <select
+    id="year-filter"
+    value={selectedYear}
+    onChange={(event) => setSelectedYear(event.target.value)}
+  >
+    <option value="All years">All years</option>
+    <option value="Freshman">Freshman</option>
+    <option value="Sophomore">Sophomore</option>
+    <option value="Junior">Junior</option>
+    <option value="Senior">Senior</option>
+  </select>
+</div>
+<section className="profile-grid" aria-label="Student profiles">
+  <ProfileCard
+    name="Alex"
+    year="Freshman"
+    activity="Explore Chicago together"
+    interests="Exploring · Photography"
+    availability="Weekends"
+    image="/alex.png"
+    selectedYear={selectedYear}
+  />
+
+  <ProfileCard
+    name="Jamie"
+    year="Sophomore"
+    activity="A cafe study buddy"
+    interests="Cafés · Music"
+    availability="Mondays"
+    image="/jamie.png"
+    selectedYear={selectedYear}
+  />
+
+  <ProfileCard
+    name="Sam"
+    year="Junior"
+    activity="A walking buddy"
+    interests="Walks · Outdoors"
+    availability="Weekends"
+    image="/sam.png"
+    selectedYear={selectedYear}
+  />
+
+  <ProfileCard
+    name="Jordan"
+    year="Sophomore"
+    activity="Try new restaurants"
+    interests="Food · Cafés"
+    availability="Fridays"
+    image="/jordan.png"
+    selectedYear={selectedYear}
+  />
+
+  <ProfileCard
+    name="Taylor"
+    year="Senior"
+    activity="A library study partner"
+    interests="Studying · Books"
+    availability="Weekdays"
+    image="/taylor.png"
+    selectedYear={selectedYear}
+  />
+
+  <ProfileCard
+    name="Olivia"
+    year="Freshman"
+    activity="Attend campus events"
+    interests="Events · Music"
+    availability="Weekdays"
+    image="/olivia.png"
+    selectedYear={selectedYear}
+  />
+</section>
+      </main>
+
+      <footer>
+        <p>Find company for everyday Northwestern life.</p>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
